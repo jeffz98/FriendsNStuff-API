@@ -3,7 +3,13 @@ const { User } = require('../models');
 module.exports = {
   getUser(req, res) {
     User.find()
-      .then((users) => res.json(users))
+      .populate({path: "thoughts", select: "_id"})
+      .populate("friends")
+      .select("-__V")
+      .then((users) => {
+        console.log(users);
+        res.status(200).json(users);
+      })
       .catch((err) => {
         console.error({ message: err });
         return res.status(500).json(err);
@@ -25,9 +31,13 @@ module.exports = {
       .catch((err) => res.status(500).json(err));
   },
   updateUser(req, res) {
-    User.findOneAndUpdate({_id: req.params.userId}, {$set: req.body} )
+    User.findOneAndUpdate({_id: req.params.userId}, {$set: req.body})
+      .then((users) => res.json(users))
+      .catch((err) => res.status(500).json(err));
   },
   deleteUser() {
-    
+    User.findOneAndDelete({_id: req.params.userId})
+  .then((users) => res.json(users))
+  .catch((err) => res.status(500).json(err));
   }
 };
