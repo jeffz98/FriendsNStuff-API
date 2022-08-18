@@ -1,26 +1,25 @@
-const { Tags, Post } = require('../models');
+const { Thoughts, User } = require('../models');
 
 module.exports = {
-  getTags(req, res) {
-    Tags.find({})
-      .select('-__v')
-      .populate('posts')
-      .then((tags) => res.json(tags))
+  getThoughts(req, res) {
+    Thoughts.find()
+      .then((thoughts) => {
+        console.log(thoughts);
+        res.status(200).json(thoughts)
+      })
       .catch((err) => res.status(500).json(err));
   },
-  getSingleTag(req, res) {
-    Tags.findOne({ _id: req.params.tagId })
-      .select('-__v')
-      .populate('posts')
-      .then((tag) =>
+  getSingleThought(req, res) {
+    Tags.findOne({ _id: req.params._id })
+      .then((thought) =>
         !tag
-          ? res.status(404).json({ message: 'No tag with that ID' })
-          : res.json(tag)
+          ? res.status(404).json({ message: 'No thought with that ID' })
+          : res.json(thought)
       )
       .catch((err) => res.status(500).json(err));
   },
   // create a new tag
-  createTag(req, res) {
+  createThought(req, res) {
     Tags.create(req.body)
       .then((tag) => {
         return Post.findOneAndUpdate(
