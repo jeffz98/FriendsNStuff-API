@@ -10,7 +10,7 @@ module.exports = {
       .catch((err) => res.status(500).json(err));
   },
   getSingleThought(req, res) {
-    Tags.findOne({ _id: req.params._id })
+    Thoughts.findOne({ _id: req.params._id })
       .then((thought) =>
         !tag
           ? res.status(404).json({ message: 'No thought with that ID' })
@@ -20,20 +20,21 @@ module.exports = {
   },
   // create a new tag
   createThought(req, res) {
-    Tags.create(req.body)
-      .then((tag) => {
-        return Post.findOneAndUpdate(
-          { _id: req.body.postId },
-          { $addToSet: { tags: tag._id } },
+    Thoughts.create(req.body)
+      .then((thought) => {
+        console.log(thought);
+        return User.findOneAndUpdate(
+          { _id: req.body._id },
+          { $push: { thoughts: thought._id } },
           { new: true }
         );
       })
-      .then((user) =>
-        !user
+      .then((thought) =>
+        !thought
           ? res
               .status(404)
-              .json({ message: 'Tag created, but found no post with that ID' })
-          : res.json('Created the tag 🎉')
+              .json({ message: 'Thought created, but found no user with that ID' })
+          : res.json('Created the thought 🎉')
       )
       .catch((err) => {
         console.log(err);
