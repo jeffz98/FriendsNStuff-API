@@ -3,9 +3,7 @@ const { User, Thought } = require('../models');
 module.exports = {
   getUser(req, res) {
     User.find()
-      // .populate({path: "thought", select: "_id"})
-      // .populate("friends")
-      // .select("-__V")
+      .select('-__v')
       .then((users) => {
         console.log(users);
         return res.status(200).json(users);
@@ -17,6 +15,9 @@ module.exports = {
   },
   getSingleUser(req, res) {
     User.findOne({ _id: req.params._id })
+      .populate({path: "thoughts", select: "_id"})
+      // .populate("thoughts")
+      .populate("users")
       .select('-__v')
       // .populate("thoughts")
       .then((users) =>
@@ -46,11 +47,11 @@ module.exports = {
   },
   deleteUser() {
     User.findOneAndDelete({_id: req.params._id})
-    .then((user) =>
-      !user
-        ? res.status(404).json({ message: 'No user with that ID' })
-        : Thought.deleteMany({ _id: { $in: user.friends } })
-    )
+    // .then((user) =>
+    //   !user
+    //     ? res.status(404).json({ message: 'No user with that ID' })
+    //     : Thought.deleteMany({ _id: { $in: user.friends } })
+    // )
     .then(() => res.json({ message: 'User and thoughts deleted!' }))
     .catch((err) => res.status(500).json(err));
   }

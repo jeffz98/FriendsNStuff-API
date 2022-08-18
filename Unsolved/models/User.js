@@ -1,7 +1,8 @@
 const { Schema, model } = require('mongoose');
+const mongoose = require("mongoose");
 
 // Schema to create Post model
-const userSchema = new Schema(
+const userSchema = new mongoose.Schema(
   {
     username: {
       type: String,
@@ -22,14 +23,14 @@ const userSchema = new Schema(
     },
     thoughts: [
       {
-        type: Schema.Types.ObjectId,
-        ref: 'Thought',
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'thought',
       },
     ],
     friends: [
       {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'user',
       }
     ]
   },
