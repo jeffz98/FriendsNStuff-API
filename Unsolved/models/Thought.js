@@ -1,4 +1,5 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model, Types } = require('mongoose');
+// const mongoose = require("mongoose");
 // const reactionSchema = require('Reaction');
 
 const reactionSchema = new Schema(

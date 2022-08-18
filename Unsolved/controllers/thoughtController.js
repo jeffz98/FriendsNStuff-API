@@ -4,7 +4,7 @@ module.exports = {
   getThoughts(req, res) {
     Thought.find({}, (err, thought) => {
       if (thought) {
-        console.log(thoughts);
+        console.log(thought);
         return res.status(200).json(thought);
       } else {
         return res.status(500).json(err);
@@ -16,9 +16,9 @@ module.exports = {
       
   },
   getSingleThought(req, res) {
-    Thought.findOne({ _id: req.params._id })
+    Thought.findOne({ _id: req.params.thoughtId })
       .then((thought) =>
-        !tag
+        !thought
           ? res.status(404).json({ message: 'No thought with that ID' })
           : res.json(thought)
       )
@@ -30,8 +30,8 @@ module.exports = {
       .then((thought) => {
         console.log(thought);
         return User.findOneAndUpdate(
-          { _id: req.body._id },
-          { $push: { thoughts: thought._id } },
+          { _id: req.body.thoughtId },
+          { $push: { thoughts: thought.thoughtId } },
           { new: true }
         );
       })

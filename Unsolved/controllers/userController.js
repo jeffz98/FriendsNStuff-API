@@ -14,16 +14,16 @@ module.exports = {
       });
   },
   getSingleUser(req, res) {
-    User.findOne({ _id: req.params._id })
-      .populate({path: "thoughts", select: "_id"})
-      // .populate("thoughts")
-      .populate("users")
+    User.findOne({ _id: req.params.userId })
+      // .populate({path: "thoughts", select: "_id"})
+      .populate("thoughts")
+      .populate("friends")
       .select('-__v')
       // .populate("thoughts")
       .then((users) =>
         !users
           ? res.status(404).json({ message: 'No user with that ID' })
-          : res.status(200).json(users)
+          : res.json(users)
       )
       .catch((err) => res.status(500).json(err));
   },
@@ -35,7 +35,7 @@ module.exports = {
   },
   updateUser(req, res) {
     User.findOneAndUpdate(
-      {_id: req.params._id}, 
+      {_id: req.params.userId}, 
       {$set: req.body},
       { runValidators: true, new: true })
       .then((user) =>
@@ -45,8 +45,8 @@ module.exports = {
       )
       .catch((err) => res.status(500).json(err));
   },
-  deleteUser() {
-    User.findOneAndDelete({_id: req.params._id})
+  deleteUser(req, res) {
+    User.findOneAndDelete({_id: req.params.userId})
     // .then((user) =>
     //   !user
     //     ? res.status(404).json({ message: 'No user with that ID' })
