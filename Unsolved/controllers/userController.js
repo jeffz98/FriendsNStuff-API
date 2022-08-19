@@ -4,6 +4,8 @@ module.exports = {
   getUser(req, res) {
     User.find()
       .select('-__v')
+      .populate("thoughts")
+      .populate("friends")
       .then((users) => {
         console.log(users);
         return res.status(200).json(users);
@@ -15,11 +17,9 @@ module.exports = {
   },
   getSingleUser(req, res) {
     User.findOne({ _id: req.params.userId })
-      // .populate({path: "thoughts", select: "_id"})
+      .select('-__v')
       .populate("thoughts")
       .populate("friends")
-      .select('-__v')
-      // .populate("thoughts")
       .then((users) =>
         !users
           ? res.status(404).json({ message: 'No user with that ID' })
